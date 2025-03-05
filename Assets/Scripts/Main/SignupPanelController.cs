@@ -28,7 +28,7 @@ public class SignupPanelController : MonoBehaviour
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(nickname) ||
             string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
         {
-            GameManager.Instance.OpenConfirmPanel("필수 입력을 확인해주십시오", () =>
+            GameManager.Instance.OpenConfirmPanel("입력 내용이 누락되었습니다.", () =>
             {
                 
             });
@@ -58,7 +58,8 @@ public class SignupPanelController : MonoBehaviour
         {
             GameManager.Instance.OpenConfirmPanel("비밀번호가 서로 다릅니다.", () =>
             {
-                
+                _passwordInputField.text = "";
+                _confirmPasswordInputField.text = "";
             });
         }
     }
