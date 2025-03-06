@@ -76,13 +76,21 @@ public class NetworkManage : Singleton<NetworkManage>
             }
             else
             {
+<<<<<<< HEAD
                 var cookie = www.GetResponseHeader("Set-Cookie");
+=======
+                var cookie = www.GetResponseHeader("set-cookie");
+>>>>>>> upstream/main
                 if (!string.IsNullOrEmpty(cookie))
                 {
                     int lastIndex = cookie.LastIndexOf(";");
                     string sid = cookie.Substring(0, lastIndex);
+<<<<<<< HEAD
                     Debug.Log(sid);
                     PlayerPrefs.SetString("sid", sid);
+=======
+                    PlayerPrefs.SetString("sid", sid); 
+>>>>>>> upstream/main
                 }
                 
                 var resultString = www.downloadHandler.text;
@@ -122,12 +130,22 @@ public class NetworkManage : Singleton<NetworkManage>
                new UnityWebRequest(Constants.ServerURL + "/users/score", UnityWebRequest.kHttpVerbGET))
         {
             www.downloadHandler = new DownloadHandlerBuffer();
+<<<<<<< HEAD
+=======
+            
+>>>>>>> upstream/main
             string sid = PlayerPrefs.GetString("sid", "");
             if (!string.IsNullOrEmpty(sid))
             {
                 www.SetRequestHeader("Cookie", sid);
             }
+<<<<<<< HEAD
             yield return www.SendWebRequest();
+=======
+
+            yield return www.SendWebRequest();
+
+>>>>>>> upstream/main
             if (www.result == UnityWebRequest.Result.ConnectionError ||
                 www.result == UnityWebRequest.Result.ProtocolError)
             {
@@ -135,19 +153,30 @@ public class NetworkManage : Singleton<NetworkManage>
                 {
                     Debug.Log("로그인이 필요합니다.");
                 }
+<<<<<<< HEAD
+=======
+                
+>>>>>>> upstream/main
                 failure?.Invoke();
             }
             else
             {
                 var result = www.downloadHandler.text;
                 var userScore = JsonUtility.FromJson<ScoreResult>(result);
+<<<<<<< HEAD
                 Debug.Log(userScore.score);
                 Debug.Log("자동 로그인 성공");
+=======
+                
+                Debug.Log(userScore.score);
+                
+>>>>>>> upstream/main
                 success?.Invoke(userScore);
             }
         }
     }
 
+<<<<<<< HEAD
     public IEnumerator SetScore(AddScore addScore, Action success, Action failure)
     {
         string jsonString = JsonUtility.ToJson(addScore);
@@ -159,12 +188,27 @@ public class NetworkManage : Singleton<NetworkManage>
             www.uploadHandler = new UploadHandlerRaw(bodyRaw);
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
+=======
+    public IEnumerator GetLeaderboard(Action<Scores> success, Action failure)
+    {
+        using (UnityWebRequest www =
+               new UnityWebRequest(Constants.ServerURL + "/leaderboard", UnityWebRequest.kHttpVerbGET))
+        {
+            www.downloadHandler = new DownloadHandlerBuffer();
+            
+            string sid = PlayerPrefs.GetString("sid", "");
+            if (!string.IsNullOrEmpty(sid))
+            {
+                www.SetRequestHeader("Cookie", sid);
+            }
+>>>>>>> upstream/main
 
             yield return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.ConnectionError ||
                 www.result == UnityWebRequest.Result.ProtocolError)
             {
+<<<<<<< HEAD
                 Debug.Log("Error: " + www.error);
 
                 if (www.responseCode == 400)
@@ -178,6 +222,21 @@ public class NetworkManage : Singleton<NetworkManage>
             {
                 var resultString = www.downloadHandler.text;
                 Debug.Log("점수 : " );
+=======
+                if (www.responseCode == 403)
+                {
+                    Debug.Log("로그인이 필요합니다.");
+                }
+                
+                failure?.Invoke();
+            }
+            else
+            {
+                var result = www.downloadHandler.text;
+                var scores = JsonUtility.FromJson<Scores>(result);
+                
+                success?.Invoke(scores);
+>>>>>>> upstream/main
             }
         }
     }

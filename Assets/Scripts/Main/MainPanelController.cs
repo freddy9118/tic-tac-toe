@@ -30,6 +30,7 @@ public class MainPanelController : MonoBehaviour
             // 로그인 화면 띄우기
         }));
     }
+<<<<<<< HEAD
 
     public void OnClickAddScoreButton()
     {
@@ -43,4 +44,6 @@ public class MainPanelController : MonoBehaviour
 
         }));
     }
+=======
+>>>>>>> upstream/main
 }

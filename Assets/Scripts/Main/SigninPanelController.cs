@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,11 +13,14 @@ public struct SigninResult
     public int result;
 }
 
+<<<<<<< HEAD
 public struct AddScore
 {
     public int score;
 }
 
+=======
+>>>>>>> upstream/main
 public struct ScoreResult
 {
     public string id;
@@ -24,6 +28,24 @@ public struct ScoreResult
     public string nickname;
     public int score;
 }
+<<<<<<< HEAD
+=======
+
+[Serializable]
+public struct ScoreInfo
+{
+    public string username;
+    public string nickname;
+    public int score;
+}
+
+[Serializable]
+public struct Scores
+{
+    public ScoreInfo[] scores;
+}
+
+>>>>>>> upstream/main
 public class SigninPanelController : MonoBehaviour
 {
     [SerializeField] private TMP_InputField _usernameInputField;
