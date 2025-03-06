@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class NetworkManage : Singleton<NetworkManage>
 {
@@ -75,6 +76,15 @@ public class NetworkManage : Singleton<NetworkManage>
             }
             else
             {
+                var cookie = www.GetResponseHeader("Set-Cookie");
+                if (!string.IsNullOrEmpty(cookie))
+                {
+                    int lastIndex = cookie.LastIndexOf(";");
+                    string sid = cookie.Substring(0, lastIndex);
+                    Debug.Log(sid);
+                    PlayerPrefs.SetString("sid", sid);
+                }
+                
                 var resultString = www.downloadHandler.text;
                 var result = JsonUtility.FromJson<SigninResult>(resultString);
 
@@ -102,6 +112,72 @@ public class NetworkManage : Singleton<NetworkManage>
                         success?.Invoke();
                     });
                 }
+            }
+        }
+    }
+
+    public IEnumerator GetScore(Action<ScoreResult> success, Action failure)
+    {
+        using (UnityWebRequest www =
+               new UnityWebRequest(Constants.ServerURL + "/users/score", UnityWebRequest.kHttpVerbGET))
+        {
+            www.downloadHandler = new DownloadHandlerBuffer();
+            string sid = PlayerPrefs.GetString("sid", "");
+            if (!string.IsNullOrEmpty(sid))
+            {
+                www.SetRequestHeader("Cookie", sid);
+            }
+            yield return www.SendWebRequest();
+            if (www.result == UnityWebRequest.Result.ConnectionError ||
+                www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                if (www.responseCode == 403)
+                {
+                    Debug.Log("로그인이 필요합니다.");
+                }
+                failure?.Invoke();
+            }
+            else
+            {
+                var result = www.downloadHandler.text;
+                var userScore = JsonUtility.FromJson<ScoreResult>(result);
+                Debug.Log(userScore.score);
+                Debug.Log("자동 로그인 성공");
+                success?.Invoke(userScore);
+            }
+        }
+    }
+
+    public IEnumerator SetScore(AddScore addScore, Action success, Action failure)
+    {
+        string jsonString = JsonUtility.ToJson(addScore);
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonString);
+
+        using (UnityWebRequest www =
+               new UnityWebRequest(Constants.ServerURL + "/users/addscore", UnityWebRequest.kHttpVerbPOST))
+        {
+            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            www.SetRequestHeader("Content-Type", "application/json");
+
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.ConnectionError ||
+                www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log("Error: " + www.error);
+
+                if (www.responseCode == 400)
+                {
+                    // 중복 사용자 생성 팝업 표시
+                    Debug.Log("유효한 정보를 입력하세요");
+                    failure?.Invoke();
+                }
+            }
+            else
+            {
+                var resultString = www.downloadHandler.text;
+                Debug.Log("점수 : " );
             }
         }
     }

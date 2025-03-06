@@ -34,7 +34,13 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         // 로그인
-        OpenSigninPanel();
+        StartCoroutine(NetworkManage.Instance.GetScore( (userInfo) =>
+        {
+            Debug.Log("로그인 아이디: "+userInfo.username+"\n로그인 닉네임: "+userInfo.nickname);
+        }, () =>
+        {
+            OpenSigninPanel();
+        }));
     }
 
     public void ChangeToGameScene(GameType gameType)
