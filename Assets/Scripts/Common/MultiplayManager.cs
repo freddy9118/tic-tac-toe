@@ -26,7 +26,7 @@ public class MessageData
     public string message { get; set; }
 }
 
-public class MultiplayManager
+public class MultiplayManager : IDisposable
 {
     private SocketIOUnity _socket;
     private event Action<Constants.MultiplayManagerState, string> _onMultiplayStateChanged;
