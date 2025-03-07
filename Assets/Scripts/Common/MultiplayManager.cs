@@ -85,4 +85,14 @@ public class MultiplayManager
     {
         _socket.Emit("sendMessage", new { roomId, nickName, message });
     }
+
+    public void Dispose()
+    {
+        if (_socket != null)
+        {
+            _socket.Disconnect();
+            _socket.Dispose();
+            _socket = null;
+        }
+    }
 }

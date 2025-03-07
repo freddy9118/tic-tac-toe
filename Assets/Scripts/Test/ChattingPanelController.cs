@@ -61,4 +61,9 @@ public class ChattingPanelController : MonoBehaviour
             messageTextObject.GetComponent<TMP_Text>().text = messageData.nickName + " : " + messageData.message;
         });
     }
+
+    private void OnApplicationQuit()
+    {
+        _multiplayManager.Dispose();
+    }
 }
