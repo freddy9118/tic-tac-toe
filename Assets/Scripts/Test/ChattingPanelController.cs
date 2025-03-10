@@ -39,11 +39,13 @@ public class ChattingPanelController : MonoBehaviour
                 case Constants.MultiplayManagerState.JoinRoom:
                     Debug.Log("## Join Room");
                     _roomId = id;
-                    messageInputField.interactable = true;
+                    // messageInputField.interactable = true;
+                    UnityThread.executeInUpdate(() => messageInputField.interactable = true);
                     break;
                 case Constants.MultiplayManagerState.StartGame:
                     Debug.Log("## Start Game");
-                    messageInputField.interactable = true;
+                    // messageInputField.interactable = true;
+                    UnityThread.executeInUpdate(() => messageInputField.interactable = true);
                     break;
                 case Constants.MultiplayManagerState.EndGame:
                     Debug.Log("## End Game");
